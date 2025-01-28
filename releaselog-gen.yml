@@ -1,0 +1,23 @@
+parameters:
+  DisplayName: 'Publish Dotnet'
+  PreviousGitHash: ''
+  ReleaselogFile: 'releasenotes.md'
+
+
+steps:
+- task: PowerShell@2
+  displayName: 'Create Release log'
+  inputs:
+    targetType: Inline
+    script: |
+      Write-Output "Creating Release Log"
+      $remoteUrl = git config --get remote.origin.url
+      Write-Output "The remote URL is: $remoteUrl"
+      $currentCommitHash = git rev-parse HEAD
+      $remoteUrl = git config --get remote.origin.url
+      "# Release Notes" > ${{ parameters.ReleaselogFile }}
+      "---" >> ${{ parameters.ReleaselogFile }}
+      git log ${{ parameter.PreviousGitHash }}..$currentCommitHash --pretty=format:"- [%h]($remoteUrl/commit/%H) %s" >> ${{ parameters.ReleaselogFile }}
+      cat ${{ parameters.ReleaselogFile }}
+ 
+
