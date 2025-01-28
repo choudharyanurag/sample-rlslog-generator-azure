@@ -1,0 +1,1 @@
+# sample-rlslog-generator-azure
